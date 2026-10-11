@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "discord": {
-      "command": "node",
-      "args": ["dist/index.js"]
+      "command": "bash",
+      "args": ["scripts/start.sh"]
     }
   }
 }

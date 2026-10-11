@@ -9,18 +9,24 @@ Discord REST API v10 を直接叩くので Gateway 接続（常駐 bot）は不�
    - `list_members` を使うなら Bot ページで **Server Members Intent** を ON
 2. **サーバーに招待** — OAuth2 → URL Generator で scope `bot`、権限は `Manage Server` / `Manage Channels` / `Manage Roles` / `View Channels`（全部任せるなら `Administrator`）
    - ⚠ bot は **自分の最上位ロールより下のロール** しか操作できない。サーバー設定 → ロールで bot のロールを上の方へ移動しておく
-3. **ビルド & トークン設定**
+3. **トークン設定**
    ```sh
-   npm install
-   npm run build
    cp .env.example .env   # DISCORD_BOT_TOKEN を記入
    ```
+   依存関係のインストールとビルドは `scripts/start.sh` が起動時に必要な場合だけ自動で行う（`node_modules` がない / `package-lock.json` 更新時に `npm ci`、`dist` がない / `src` 更新時に `npm run build`）。
 4. **Claude Code で使う** — このディレクトリで `claude` を起動すると `.mcp.json` の `discord` サーバーが読み込まれる（初回に承認）。
    他のディレクトリから使う場合:
    ```sh
-   claude mcp add discord --scope user -- node /Users/serken/Documents/discord_mcp/dist/index.js
+   claude mcp add discord --scope user -- bash /Users/serken/Documents/discord_mcp/scripts/start.sh
    ```
    （`.env` はサーバー自身がプロジェクトルートから読むので、トークンを `claude mcp add -e` で渡す必要はない）
+
+## Claude Code on the web（クラウド環境）
+
+claude.ai/code の「クラウド環境を追加」で以下を設定する。セットアップスクリプトは不要（起動時に自動ビルドされる）。
+
+- **ネットワークアクセス**: Custom → `discord.com` を追加し、パッケージマネージャーのデフォルトリストも含める
+- **環境変数**: `DISCORD_BOT_TOKEN=...`（`.env` はクラウドに届かないためここで渡す）
 
 ## 環境変数
 
